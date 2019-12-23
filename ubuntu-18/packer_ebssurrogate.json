@@ -1,0 +1,81 @@
+{
+ "variables":{
+    "region": "",
+    "vpc_id": "",
+    "subnet_id": "",
+    "source_ami": "",
+    "ssh_username": "ubuntu"
+ },
+ "builders": [{
+  "type": "amazon-ebssurrogate",
+  "ami_virtualization_type": "hvm",
+  "region": "{{user `region`}}",
+  "instance_type": "t2.micro",
+  "ena_support": true,
+  "iam_instance_profile": "terraform_build",
+  "vpc_id": "{{user `vpc_id`}}",
+  "subnet_id": "{{user `subnet_id`}}",
+  "ssh_username": "{{user `ssh_username`}}",
+  "source_ami": "{{user `source_ami`}}",
+  "ami_name": "packer-ubuntu-18-{{timestamp}}",
+  "ami_description": "Amazon Linux ubutnu 18.04",
+  "launch_block_device_mappings": [{
+     "delete_on_termination": true,
+     "device_name": "/dev/xvdf",
+     "volume_type": "gp2",
+     "volume_size": 100
+    }
+   ],
+  "ami_root_device": {
+    "source_device_name": "/dev/xvdf",
+    "device_name": "/dev/xvda",
+    "delete_on_termination": true,
+    "volume_size": "100",
+    "volume_type": "gp2"
+   },
+  "tags": {
+    "Name": "packer-ubuntu-18-{{timestamp}}",
+    "team": "open_devops"
+  },
+  "run_tags" : {
+    "Name": "packer-ubuntu-18-{{timestamp}}",
+    "team": "open_devops"
+    }
+ }],
+ "provisioners": [
+   {
+        "type": "shell",
+        "inline": [
+		"sudo apt-get install software-properties-common -y",
+		"sudo apt-add-repository ppa:ansible/ansible-2.7 -y",
+ 		"sudo apt-get update -y",
+ 		"sudo apt-get install ansible python-pip parted -y"
+        ]
+   },
+    {
+    "type": "ansible",
+    "playbook_file": "./ansible.yml"
+    },
+ {
+  "type": "shell",
+  "execute_command": "sudo {{.Vars}} sh {{.Path}}",
+  "script": "scripts/configure_github.sh"
+  },
+   {
+    "type": "shell",
+    "execute_command": "echo 'test' | sudo -S bash {{.Path}}",
+    "script": "scripts/create_partitions.sh"
+
+  },
+ {
+ "type": "file",
+  "source": "scripts/boot_changes.sh",
+  "destination": "/mnt/tmp/boot_changes.sh"
+ },
+ {
+ "type": "shell",
+ "execute_command": "sudo {{.Vars}} sh {{.Path}}",
+ "script": "scripts/chroot.sh"
+ }
+   ]
+}
