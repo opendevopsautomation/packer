@@ -1,5 +1,5 @@
 ---
-- hosts: 10.4.40.208
+- hosts: localhost
   become: true
   tasks:
     - name: common | set hostname
