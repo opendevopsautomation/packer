@@ -2,7 +2,7 @@
  "variables":{
     "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
     "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
-    "vpc_region": "",
+    "region": "",
     "vpc_id": "",
     "subnet_id": "",
     "source_ami": "",
@@ -11,7 +11,7 @@
  "builders": [{
   "type": "amazon-ebssurrogate",
   "ami_virtualization_type": "hvm",
-  "region": "{{user `vpc_region`}}",
+  "region": "{{user `region`}}",
   "instance_type": "t2.micro",
   "ena_support": true,
   "iam_instance_profile": "packer_build",
