@@ -1,5 +1,7 @@
 {
  "variables":{
+    "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
     "region": "",
     "vpc_id": "",
     "subnet_id": "",
@@ -12,7 +14,7 @@
   "region": "{{user `region`}}",
   "instance_type": "t2.micro",
   "ena_support": true,
-  "iam_instance_profile": "terraform_build",
+  "iam_instance_profile": "packer_build",
   "vpc_id": "{{user `vpc_id`}}",
   "subnet_id": "{{user `subnet_id`}}",
   "ssh_username": "{{user `ssh_username`}}",
