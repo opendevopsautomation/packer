@@ -5,5 +5,5 @@ private key content
 EOM
 chmod 400 /root/.ssh/id_rsa
 
-#To configure ansible_vault
-echo 'W%,cpJ7V' > /root/.ansible_vault
+#uncomment below line to configure ansible_vault
+#echo 'W%,cpJ7V' > /root/.ansible_vault
