@@ -1,5 +1,6 @@
 # packer
 =========
+
 Packer for creating identical machine images for multiple platforms from a single JSON configuration.
 
 Requirements
